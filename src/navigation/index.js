@@ -30,9 +30,27 @@ const TabNavigationPracticantes = () => {
 const TabNavigationGuardias = () => {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="GuardiaScreen" component={GuardiaScreen} />
-      <Tab.Screen name="AltaEquipo" component={AltaEquipo} />
-      <Tab.Screen name="SignUpNoEmpleados" component={SignUpNoEmpleados} />
+      <Tab.Screen
+        name="GuardiaScreen"
+        component={GuardiaScreen}
+        options={{
+          tabBarLabel: "ENTRADA",
+        }}
+      />
+      <Tab.Screen
+        name="AltaEquipo"
+        component={AltaEquipo}
+        options={{
+          tabBarLabel: "EQUIPOS EXTERNOS",
+        }}
+      />
+      <Tab.Screen
+        name="SignUpNoEmpleados"
+        component={SignUpNoEmpleados}
+        options={{
+          tabBarLabel: "ALTAS",
+        }}
+      />
     </Tab.Navigator>
   );
 };
