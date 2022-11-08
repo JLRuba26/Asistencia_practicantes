@@ -12,7 +12,8 @@ import SignUpNoEmpleados from "../screens/SignUpNoEmpleados/SignUpNoEmpleado";
 import ConfirmEmailScreen from "../screens/ConfirmEmail/ConfirmEmailScreen";
 import ForgotPassword from "../screens/ForgotPassword";
 import ResetPassword from "../screens/ResetPassword";
-import GuardiaScreen from "../screens/GuardiaScreen";
+import AsistenciaEntradaScreen from "../screens/AsistenciaEntradaScreen/AsistenciaEntradaScreen.js";
+import AsistenciaSalidaScreen from "../screens/AsistenciaSalidaScreen/AsistenciaSalidaScreen.js";
 import AltaEquipo from "../screens/AltaEquipoScreen/AltaEquiposScreen.js";
 import CapturaAsistenciaScreen from "../screens/CapturaAsistenciaScreen/CapturaAsistenciaScreen.js";
 
@@ -30,9 +31,34 @@ const TabNavigationPracticantes = () => {
 const TabNavigationGuardias = () => {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="GuardiaScreen" component={GuardiaScreen} />
-      <Tab.Screen name="AltaEquipo" component={AltaEquipo} />
-      <Tab.Screen name="SignUpNoEmpleados" component={SignUpNoEmpleados} />
+      <Tab.Screen
+        name="AsistenciaEntradaScreen"
+        component={AsistenciaEntradaScreen}
+        options={{
+          tabBarLabel: "ENTRADA",
+        }}
+      />
+      <Tab.Screen
+        name="AsistenciaSalidaScreen"
+        component={AsistenciaSalidaScreen}
+        options={{
+          tabBarLabel: "SALIDA",
+        }}
+      />
+      <Tab.Screen
+        name="AltaEquipo"
+        component={AltaEquipo}
+        options={{
+          tabBarLabel: "EQUIPOS EXTERNOS",
+        }}
+      />
+      <Tab.Screen
+        name="SignUpNoEmpleados"
+        component={SignUpNoEmpleados}
+        options={{
+          tabBarLabel: "ALTAS",
+        }}
+      />
     </Tab.Navigator>
   );
 };

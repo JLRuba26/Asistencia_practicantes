@@ -1,7 +1,10 @@
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
-import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Button, Alert, Animated } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
 import { sesion as noEmpleado } from "../SingInScreen/SignInScreen.js";
 import CustomButton from "../../components/CustomButton/CustomButton";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Box, Heading } from "native-base";
+import { Camera } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -11,10 +14,13 @@ var noempleado;
 var sesion;
 var nombre;
 
-const GuardiaScreen = () => {
+const AsistenciaSalidaScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
+  const cameraRef = useRef(null);
   const [scanned, setScanned] = useState(false);
-  const [text, setText] = useState("Aun no se ha escaneado el codigo");
+  const [textPermission, setTextPermission] = useState(
+    "Aun no se ha escaneado el codigo"
+  );
   const navigation = useNavigation();
 
   const alerta_usuario_encontrado = () =>
@@ -70,10 +76,31 @@ const GuardiaScreen = () => {
       });
   };
 
+  const offset = useRef(new Animated.Value(0)).current;
+  const animation = useRef(
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(offset, {
+          toValue: 320,
+          duration: 3000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(offset, {
+          toValue: 0,
+          duration: 3000,
+          useNativeDriver: false,
+        }),
+      ])
+    )
+  ).current;
+
   const askForCameraPermission = () => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status == "granted");
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      if (status == "granted")
+        setTextPermission("Coloca el código en la cámara");
+      else setTextPermission("La aplicación no tiene permisos para la cámara");
+      setHasPermission(status === "granted");
     })();
   };
 
@@ -85,8 +112,11 @@ const GuardiaScreen = () => {
   // Comportamiento al escanear un codigo
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    setText(data);
+    animation.stop();
+    cameraRef.current.pausePreview();
+    setTextPermission(data);
     noempleado = data;
+    animation.stop();
     onCapturaAsistencia();
     console.log("Type: " + type + "\nData: " + data);
   };
@@ -95,8 +125,11 @@ const GuardiaScreen = () => {
   if (hasPermission === null) {
     return (
       <View style={styles.root}>
-        <Text style={{ fontSize: 24, alignSelf: "center" }}>{noEmpleado}</Text>
         <Text>Requiriendo permisos para la camara</Text>
+        <CustomButton
+          text="Habilitar camara"
+          onPress={() => askForCameraPermission()}
+        />
       </View>
     );
   }
@@ -115,23 +148,45 @@ const GuardiaScreen = () => {
   }
   // retorna la camara en funcion
   return (
-    <View style={styles.root}>
-      <View style={styles.barcodebox}>
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={{ height: 400, width: 400 }}
+    <SafeAreaView
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
+      <Heading textAlign="center" size="md" color="#50514f" marginBottom={2}>
+        REGISTRO DE SALIDA DE PRACTICANTES
+      </Heading>
+      <Heading textAlign="center" size="md" color="#50514f" marginBottom={2}>
+        {textPermission}
+      </Heading>
+      <Box
+        overflow="hidden"
+        borderRadius={30}
+        width={330}
+        height={330}
+        backgroundColor="#50514f"
+      >
+        {hasPermission ? (
+          <Camera
+            ref={cameraRef}
+            style={StyleSheet.absoluteFill}
+            ratio="1:1"
+            onBarCodeScanned={handleBarCodeScanned}
+            onCameraReady={() => animation.start()}
+          />
+        ) : null}
+        <Animated.View
+          top={offset}
+          width="100%"
+          height={5}
+          backgroundColor="#00ff00"
         />
-      </View>
-      <Text>{text}</Text>
-      {scanned && (
-        <Button
-          title={"Escanear de nuevo?"}
-          onPress={() => setScanned(false)}
-          color="tomato"
-        />
-      )}
-    </View>
+      </Box>
+    </SafeAreaView>
   );
+};
+
+const border = {
+  borderWidth: 2,
+  borderColor: "red",
 };
 
 const styles = StyleSheet.create({
@@ -167,4 +222,4 @@ const styles = StyleSheet.create({
 });
 
 export { sesion, nombre };
-export default GuardiaScreen;
+export default AsistenciaSalidaScreen;
