@@ -14,7 +14,7 @@ var noempleado;
 var sesion;
 var nombre;
 
-const GuardiaScreen = () => {
+const AsistenciaSalidaScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const cameraRef = useRef(null);
   const [scanned, setScanned] = useState(false);
@@ -152,7 +152,7 @@ const GuardiaScreen = () => {
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
       <Heading textAlign="center" size="md" color="#50514f" marginBottom={2}>
-        REGISTRO DE ENTRADAS DE PRACTICANTES
+        REGISTRO DE SALIDA DE PRACTICANTES
       </Heading>
       <Heading textAlign="center" size="md" color="#50514f" marginBottom={2}>
         {textPermission}
@@ -222,4 +222,4 @@ const styles = StyleSheet.create({
 });
 
 export { sesion, nombre };
-export default GuardiaScreen;
+export default AsistenciaSalidaScreen;

@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomInputs from "../../components/CustomInputs/CustomInputs";
 import { useNavigation } from "@react-navigation/native";
-import { sesion, nombre } from "../GuardiaScreen/GuardiaScreen.js";
+import {
+  sesion,
+  nombre,
+} from "../AsistenciaEntradaScreen/AsistenciaEntradaScreen.js";
 import moment from "moment/moment.js";
 import axios from "axios";
 import { API } from "../../axios/Api.js";
@@ -65,7 +68,7 @@ const CapturaAsistenciaScreen = () => {
       [
         {
           text: "Ok",
-          //onPress: () => Navigation.navigate("GuardiaScreen"),
+          //onPress: () => Navigation.navigate("AsistenciaEntradaScreen"),
           style: "cancel",
         },
       ],
